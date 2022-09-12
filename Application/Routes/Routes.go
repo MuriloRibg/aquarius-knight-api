@@ -32,8 +32,7 @@ func HandleRequests() {
 	docs.SwaggerInfo.Title = "Api do Murilove"
 	docs.SwaggerInfo.Description = "Api REST com Gin e Gorm"
 	docs.SwaggerInfo.Version = "1.0"
-	//docs.SwaggerInfo.Host = "aquarius-knight-api.azurewebsites.net/v1"
-	docs.SwaggerInfo.Host = "localhost:80/v1"
+	docs.SwaggerInfo.Host = "aquarius-knight-api.azurewebsites.net/v1"
 	docs.SwaggerInfo.Version = "v1"
 	docs.SwaggerInfo.Schemes = []string{"http"}
 
