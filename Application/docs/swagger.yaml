@@ -1,0 +1,144 @@
+definitions:
+  Models.Person:
+    properties:
+      BirthDate:
+        type: string
+      FirstName:
+        type: string
+      IdPerson:
+        type: integer
+      LastName:
+        type: string
+    type: object
+  httputil.HTTPError:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: status bad request
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /people:
+    get:
+      consumes:
+      - application/json
+      description: Rota para buscar todos as pessoas. | Route to fetch all people.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Models.Person'
+      summary: Listar todos os alunos. | List all people.
+      tags:
+      - Person
+  /person:
+    post:
+      consumes:
+      - application/json
+      description: Post pessoa/person
+      parameters:
+      - description: Modelo do pessoa. | Models of person.
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/Models.Person'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/Models.Person'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Inserir uma nova pessoa. | Insert new person.
+      tags:
+      - Person
+  /person/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete pessoa por Id. | Delete person by Id.
+      parameters:
+      - description: Person ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Deletar uma pessoa. | Delete a person.
+      tags:
+      - Person
+    get:
+      consumes:
+      - application/json
+      description: Get pessoa por ID. | Search person for id
+      parameters:
+      - description: Person ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/Models.Person'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Recuperar uma pessoa. | Retrieve person by id.
+      tags:
+      - Person
+    put:
+      consumes:
+      - application/json
+      description: Put person por Id. | Edit person by Id.
+      parameters:
+      - description: Modelo de pessoa. | Models of person.
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/Models.Person'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/Models.Person'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: Editar uma pessoa. | Edit a person.
+      tags:
+      - Person
+swagger: "2.0"
