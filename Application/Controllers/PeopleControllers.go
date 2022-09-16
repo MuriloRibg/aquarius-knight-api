@@ -3,7 +3,7 @@ package Controllers
 import (
 	"aquarius-knight-api/DataBase"
 	"aquarius-knight-api/Models"
-	"database/sql"
+	"aquarius-knight-api/Services"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/swaggo/swag/example/celler/httputil"
@@ -60,18 +60,13 @@ func Search(c *gin.Context) {
 // @Failure      400  {object}  httputil.HTTPError
 // @Router       /person [post]
 func Insert(c *gin.Context) {
-	var Person Models.Person
-	if err := c.ShouldBindJSON(&Person); err != nil {
+	err, Person := Services.InsertPerson(c)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Error message": err.Error()})
 		return
 	}
-
-	DataBase.DB.Exec("INSERT INTO PEOPLE (IDPERSON,FNAME,LNAME,BIRTHDATE) VALUES (@ID,@FNAME,@LNAME,@BIRTHDATE)",
-		sql.Named("ID", Person.IdPerson),
-		sql.Named("FNAME", Person.Fname),
-		sql.Named("LNAME", Person.Lname),
-		sql.Named("BIRTHDATE", Person.BirthDate))
 	c.JSON(http.StatusOK, Person)
+	return
 }
 
 // Delete godoc
@@ -85,17 +80,14 @@ func Insert(c *gin.Context) {
 // @Failure      400  {object}  httputil.HTTPError
 // @Router       /person/{id} [delete]
 func Delete(c *gin.Context) {
-	id := c.Params.ByName("id")
-	var Person Models.Person
-	resp := DataBase.DB.Delete(&Person, id)
-	if resp.Error == nil {
-		c.JSON(http.StatusOK, gin.H{
-			"Mesagem": fmt.Sprintf("Pessoa com o id = %s, apagada com sucesso!", id),
-			"Message": fmt.Sprintf("Person with the id = %s, successfully deleted!", id),
-		})
+	err, id := Services.DeletePerson(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+		return
 	}
-	c.JSON(http.StatusBadRequest, gin.H{
-		"Error": resp.Error.Error(),
+	c.JSON(http.StatusOK, gin.H{
+		"Mesagem": fmt.Sprintf("Pessoa com o id = %s, apagada com sucesso!\nPerson with the id = %s, successfully deleted!", id),
+		"Message": fmt.Sprintf("Person with the id = %s, successfully deleted!", id),
 	})
 }
 
@@ -110,12 +102,10 @@ func Delete(c *gin.Context) {
 // @Failure      400  {object}  httputil.HTTPError
 // @Router       /person/{id} [put]
 func Edit(c *gin.Context) {
-	id := c.Params.ByName("id")
-	var Person Models.Person
-	if err := c.ShouldBindJSON(&Person); err != nil {
+	err, Person := Services.EditPerson(c)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
 	}
-	DataBase.DB.Model(&Person).Where("id = ?", id).Updates(Person)
 	c.JSON(http.StatusOK, Person)
 }
