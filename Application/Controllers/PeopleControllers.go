@@ -21,6 +21,7 @@ import (
 func List(c *gin.Context) {
 	var People []Models.Person
 	DataBase.DB.Find(&People)
+	print(People)
 	c.JSON(http.StatusOK, People)
 }
 
