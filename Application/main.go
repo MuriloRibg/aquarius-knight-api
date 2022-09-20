@@ -5,7 +5,16 @@ import (
 	"aquarius-knight-api/Routes"
 )
 
+type App struct {
+	route Routes.Route
+}
+
+func (a *App) app() {
+	a.route.HandleRequests()
+}
+
 func main() {
 	DataBase.ConectToDataBase()
-	Routes.HandleRequests()
+	p := &App{route: Routes.Route{}}
+	p.app()
 }

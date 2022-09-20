@@ -6,28 +6,37 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InsertPerson(c *gin.Context) (error, Models.Person) {
-	var Person Models.Person
-	if err := c.ShouldBindJSON(&Person); err != nil {
-		return err, Person
-	}
-	DataBase.DB.Create(&Person)
-	return nil, Person
+type PeopleService struct {
+	Person Models.Person
+	People []Models.Person
 }
 
-func DeletePerson(c *gin.Context) (error, string) {
+func (ps *PeopleService) ListPeople() ([]Models.Person, error) {
+	resp := DataBase.DB.Find(&ps.People)
+	return ps.People, resp.Error
+}
+
+func (ps *PeopleService) SearchPeople(c *gin.Context) (Models.Person, error, string) {
 	id := c.Params.ByName("id")
-	var Person Models.Person
-	resp := DataBase.DB.Delete(&Person, id)
+	err := DataBase.DB.Find(&ps.Person, id)
+	return ps.Person, err.Error, id
+}
+
+func (ps *PeopleService) InsertPerson(c *gin.Context) (error, Models.Person) {
+	err := c.ShouldBindJSON(&ps.Person)
+	DataBase.DB.Create(&ps.Person)
+	return err, ps.Person
+}
+
+func (ps *PeopleService) DeletePerson(c *gin.Context) (error, string) {
+	id := c.Params.ByName("id")
+	resp := DataBase.DB.Delete(&ps.Person, id)
 	return resp.Error, id
 }
 
-func EditPerson(c *gin.Context) (error, Models.Person) {
+func (ps *PeopleService) EditPerson(c *gin.Context) (error, Models.Person) {
 	id := c.Params.ByName("id")
-	var Person Models.Person
-	if err := c.ShouldBindJSON(&Person); err != nil {
-		return err, Person
-	}
-	DataBase.DB.Model(&Person).Where("id = ?", id).Updates(Person)
-	return nil, Person
+	err := c.ShouldBindJSON(&ps.Person)
+	DataBase.DB.Model(&ps.Person).Where("id = ?", id).Updates(ps.Person)
+	return err, ps.Person
 }

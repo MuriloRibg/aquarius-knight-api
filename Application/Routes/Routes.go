@@ -21,7 +21,11 @@ import (
 
 //swag init --pd --parseInternal --parseDepth 1
 
-func HandleRequests() {
+type Route struct {
+	peopleRoute PeopleRoute
+}
+
+func (route *Route) HandleRequests() {
 	r := gin.Default()
 
 	client := appinsights.NewTelemetryClient(os.Getenv("APPINSIGHTS_INSTRUMENTATIONKEY"))
@@ -38,7 +42,7 @@ func HandleRequests() {
 
 	r.Use(Middleware.CORSMiddleware())
 	r.GET("/v1/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	PeopleRoute(r)
+	route.peopleRoute.Route(r)
 
 	err := r.Run(getPort())
 	if err != nil {
