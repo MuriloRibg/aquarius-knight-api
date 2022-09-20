@@ -38,7 +38,7 @@ func (route *Route) HandleRequests() {
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.Host = "aquarius-knight-api.azurewebsites.net/v1"
 	docs.SwaggerInfo.Version = "v1"
-	docs.SwaggerInfo.Schemes = []string{"http"}
+	docs.SwaggerInfo.Schemes = []string{"https"}
 
 	r.Use(Middleware.CORSMiddleware())
 	r.GET("/v1/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
