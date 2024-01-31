@@ -12,7 +12,7 @@ var (
 )
 
 func ConectToDataBase() {
-	conectString := fmt.Sprintf("%s:%s@tcp(%s:3306)/aquarius?charset=utf8mb4&parseTime=True&loc=Local", "delta", "#Murilo1202", "aquarius-knight-db.mysql.database.azure.com")
+	conectString := fmt.Sprintf("%s:%s@tcp(%s:3306)/aquarius?charset=utf8mb4&parseTime=True&loc=Local", "delta", senha, "aquarius-knight-db.mysql.database.azure.com")
 	DB, err = gorm.Open(mysql.Open(conectString))
 	if err != nil {
 		panic(err.Error())
